@@ -12,13 +12,13 @@ class ReportSeeder extends Seeder
         Report::create([
             'title' => 'Report 1',
             'description' => 'Description of report 1',
-            'uploads' => 'report1.jpg',
+            'uploads' => '1',
             'status' => false,
         ]);
         Report::create([
             'title' => 'Report 2',
             'description' => 'Description of report 2',
-            'uploads' => 'report2.jpg',
+            'uploads' => '2',
             'status' => true,
         ]);
     }

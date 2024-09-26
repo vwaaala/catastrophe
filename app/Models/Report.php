@@ -21,13 +21,32 @@ class Report extends Model
     protected static function booted()
     {
         static::creating(function ($model) {
-            $model->slug = str()->slug($model->title);
+            $model->slug = static::generateUniqueSlug($model->title);
         });
 
         static::updating(function ($model) {
-            $model->slug = str()->slug($model->title);
+            $model->slug = static::generateUniqueSlug($model->title, $model->id);
         });
     }
+
+    protected static function generateUniqueSlug($title, $excludeId = null)
+    {
+        $slug = str()->slug($title);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        // Check if the slug exists in the database
+        while (
+            static::where('slug', $slug)->when($excludeId, function ($query, $excludeId) {
+                return $query->where('id', '!=', $excludeId); // Exclude the current model being updated
+            })->exists()
+        ) {
+            $slug = $originalSlug . '-' . $counter++;
+        }
+
+        return $slug;
+    }
+
 
     // posts
     public function posts()
